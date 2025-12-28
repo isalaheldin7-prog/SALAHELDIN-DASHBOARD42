@@ -3,59 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pro Trading Journal</title>
+<title>Unified Trading Journal</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
-    --bg:#0b0f1a; --card:#131a2a; --border:#1f2a44;
-    --primary:#fff; --green:#22c55e; --red:#ef4444; --blue:#38bdf8;
-    --text:#e5e7eb; --muted:#94a3b8; --yellow:#facc15;
+--bg:#0b0f1a; --card:#131a2a; --border:#1f2a44;
+--primary:#fff; --green:#22c55e; --red:#ef4444; --blue:#38bdf8;
+--text:#e5e7eb; --muted:#94a3b8; --yellow:#facc15;
+--purple:#a855f7; --cyan:#06b6d4;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;padding:16px}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:system-ui;padding:16px;}
 
 /* MENU HAMBURGER */ 
-.menu-btn {position: fixed; top: 14px; left: 14px; width: 28px; height: 20px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 3000; background: rgba(11, 15, 26, 0.8); padding: 5px; box-sizing: content-box; border-radius: 4px;} 
-.menu-btn span { display: block; height: 3px; background: var(--primary); border-radius: 2px; }
+.menu-btn{position:fixed;top:14px;left:14px;width:28px;height:20px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;z-index:3000;}
+.menu-btn span{display:block;height:3px;background:var(--primary);border-radius:2px;}
 
 /* SIDEBAR */ 
-.sidebar{position:fixed;top:0;left:-260px;width:260px;height:100%;background:var(--card); border-right:1px solid var(--border);padding:60px 20px 20px 20px;transition:.3s;z-index:2000} 
-.sidebar.active{left:0} 
-.sidebar a{display:block;color:var(--text);text-decoration:none;padding:14px 12px;border-radius:8px; margin-bottom: 5px; font-size:14px;font-weight:500; transition: 0.2s;} 
-.sidebar a:hover{background: var(--border); color:var(--primary)}
+.sidebar{position:fixed;top:0;left:-260px;width:260px;height:100%;background:var(--card);border-right:1px solid var(--border);padding:60px 20px 20px 20px;transition:.3s;z-index:2000;}
+.sidebar.active{left:0;}
+.sidebar a{display:block;color:var(--text);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px;font-weight:500;}
+.sidebar a:hover{color:var(--primary);}
 
 /* CARDS & LAYOUT */ 
-.section { max-width: 1200px; margin: 0 auto; padding-top: 40px; }
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;} 
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px} 
-input,select,button{width:100%;padding:10px;margin-top:6px;background:#0f1524;border:1px solid var(--border);color:#fff;border-radius:8px} 
-button{background:var(--primary); color: #000; border:none;font-weight:bold;cursor:pointer;transition:0.2s} 
-button:hover{opacity:0.8} 
-table{width:100%;border-collapse:collapse;font-size:12px} 
-th,td{padding:12px;border-bottom:1px solid var(--border);text-align:center}
+.section{max-width:1200px;margin:0 auto;padding-top:40px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;transition:0.3s;}
+.card:hover{transform:scale(1.02);box-shadow:0 0 15px rgba(0,0,0,0.5);}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;}
+input,select,button{width:100%;padding:10px;margin-top:6px;background:#0f1524;border:1px solid var(--border);color:#fff;border-radius:8px;}
+button{background:var(--primary);border:none;font-weight:bold;cursor:pointer;transition:0.2s;}
+button:hover{opacity:0.8;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th,td{padding:10px;border-bottom:1px solid var(--border);text-align:center;}
 
-/* CALENDAR MODERN STYLE */ 
-.calendar-container { display: flex; flex-wrap: wrap; gap: 20px; background: #f8fafc; color: #334155; padding: 20px; border-radius: 14px; border: 1px solid #e2e8f0; }
-.calendar-main { flex: 3; min-width: 300px; }
-.calendar-sidebar { flex: 1; min-width: 200px; }
-
-.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; background: #e2e8f0; border: 1px solid #e2e8f0; }
-.calendar-header { background: #fff; padding: 10px; text-align: center; font-weight: bold; font-size: 12px; color: #64748b; text-transform: uppercase; }
-.day-box { background: #fff; min-height: 90px; padding: 8px; position: relative; transition: 0.2s; border: 1px solid #f1f5f9; }
-.day-box:hover { background: #f1f5f9; }
-.day-num { font-weight: 600; font-size: 13px; margin-bottom: 5px; display: block; }
-.day-pnl { font-size: 12px; font-weight: bold; display: block; margin-top: 5px; }
-.day-trades { font-size: 10px; color: #94a3b8; display: block; }
-
-.pnl-pos { background: #dcfce7 !important; color: #166534; }
-.pnl-neg { background: #fee2e2 !important; color: #991b1b; }
-
-.week-card { background: #fff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-.week-label { font-size: 12px; color: #64748b; }
-.week-val { font-weight: bold; font-size: 14px; }
-
-.month-summary { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: #1e293b; }
-.month-summary button { background:#e2e8f0; color:#334155; border:none; padding:4px 8px; cursor:pointer; border-radius:4px; }
+/* CALENDAR */ 
+.calendar-container{display:flex;flex-wrap:wrap;gap:20px;}
+.calendar-main{flex:3;min-width:300px;}
+.calendar-sidebar{flex:1;min-width:200px;}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.calendar-header{background:#1f2a44;padding:10px;text-align:center;font-weight:bold;font-size:12px;color:#94a3b8;text-transform:uppercase;}
+.day-box{background:#131a2a;min-height:80px;padding:6px;position:relative;transition:0.2s;border:1px solid var(--border);}
+.day-box:hover{background:#1f2a44;}
+.day-num{font-weight:600;font-size:13px;display:block;}
+.day-pnl{font-size:12px;font-weight:bold;display:block;margin-top:4px;}
+.day-trades{font-size:10px;color:var(--muted);display:block;}
+.pnl-pos{background:#dcfce7;color:#166534;}
+.pnl-neg{background:#fee2e2;color:#991b1b;}
+.week-card{background:#1f2a44;border:1px solid var(--border);padding:10px;border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.week-label{font-size:12px;color:#94a3b8;}
+.week-val{font-weight:bold;font-size:14px;}
+.month-summary{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:#fff;}
 </style>
 </head>
 <body>
@@ -68,224 +65,230 @@ th,td{padding:12px;border-bottom:1px solid var(--border);text-align:center}
   <a href="#" data-tab="tradeLog">📑 Trade Log</a>
   <a href="#" data-tab="calendar">📅 Calendar</a>
   <a href="#" data-tab="charts">📊 Charts</a>
+  <a href="#" data-tab="statistics">📈 Statistics</a>
   <a href="#" data-tab="settings">⚙️ Settings</a>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dash" class="section">
-    <div class="stats">
-      <div class="card" style="background:#7c3aed"><small>Net PnL</small><b id="net">$0</b></div>
-      <div class="card" style="background:#16a34a"><small>Profit</small><b id="profit">$0</b></div>
-      <div class="card" style="background:#ef4444"><small>Loss</small><b id="loss">$0</b></div>
-      <div class="card" style="background:#38bdf8"><small>Base Capital</small><b id="capital">$10000</b></div>
-      <div class="card" style="background:#a855f7"><small>Total Trades</small><b id="count">0</b></div>
-      <div class="card" style="background:#22c55e"><small>Win Rate</small><b id="winRate">0%</b></div>
-    </div>
+  <div class="stats">
+    <div class="card" style="background:#7c3aed"><small>Net PnL</small><b id="net">$0</b></div>
+    <div class="card" style="background:#16a34a"><small>Profit</small><b id="profit">$0</b></div>
+    <div class="card" style="background:#ef4444"><small>Loss</small><b id="loss">$0</b></div>
+    <div class="card" style="background:#38bdf8"><small>Capital (Base)</small><b id="capital">$10000</b></div>
+    <div class="card" style="background:#06b6d4"><small>Capital (Dynamic)</small><b id="dynamicCapital">$10000</b></div>
+    <div class="card" style="background:#a855f7"><small>Total Trades</small><b id="count">0</b></div>
+    <div class="card" style="background:#22c55e"><small>Win Rate</small><b id="winRate">0%</b></div>
+  </div>
 </div>
 
-<div id="calendar" class="section" style="display:none">
-    <div class="calendar-container">
-        <div class="calendar-main">
-            <div class="month-summary">
-                <button onclick="changeMonth(-1)">◀ Prev</button>
-                <h3 id="calMonthYear">December 2025</h3>
-                <button onclick="changeMonth(1)">Next ▶</button>
-                <div style="font-size: 14px;">Monthly Stats: <b id="calMonthPnL" style="color:#16a34a">$0.00</b></div>
-            </div>
-            <div class="calendar-grid" id="calendarGrid">
-                <div class="calendar-header">Sun</div><div class="calendar-header">Mon</div>
-                <div class="calendar-header">Tue</div><div class="calendar-header">Wed</div>
-                <div class="calendar-header">Thu</div><div class="calendar-header">Fri</div>
-                <div class="calendar-header">Sat</div>
-            </div>
-        </div>
-        <div class="calendar-sidebar" id="weeklyStats"></div>
-    </div>
-</div>
-
+<!-- ADD TRADE -->
 <div id="addTrade" class="section" style="display:none">
-    <div class="card">
-        <h3>Add New Trade</h3>
-        <input id="symbol" placeholder="Symbol (e.g. BTCUSDT)">
-        <select id="type"><option value="buy">Buy</option><option value="sell">Sell</option></select>
-        <input id="entry" type="number" placeholder="Entry Price">
-        <input id="exit" type="number" placeholder="Exit Price">
-        <input id="size" type="number" placeholder="Size/Lots">
-        <input type="date" id="tradeDate">
-        <button onclick="addTrade()">Save Trade</button>
-    </div>
+  <div class="card">
+    <select id="market">
+      <option>Forex</option><option>Crypto</option><option>Futures</option><option>Options</option><option>Bonds</option><option>Indices</option>
+    </select>
+    <input id="symbol" placeholder="Symbol">
+    <input id="tradeLink" placeholder="Trade Link (URL)">
+    <select id="session">
+      <option>Asia AM</option><option>Asia PM</option><option>London AM</option><option>London PM</option><option>New York AM</option><option>New York PM</option>
+    </select>
+    <select id="type"><option value="buy">Buy</option><option value="sell">Sell</option></select>
+    <input id="entry" type="number" placeholder="Entry">
+    <input id="exit" type="number" placeholder="Exit">
+    <input id="size" type="number" placeholder="Size">
+    <input type="date" id="tradeDate">
+    <input id="strategy" placeholder="Strategy">
+    <select id="psychology">
+      <option>Confident</option><option>Nervous</option><option>Neutral</option>
+    </select>
+    <button onclick="addTrade()">Save Trade</button>
+  </div>
 </div>
 
+<!-- TRADE LOG -->
 <div id="tradeLog" class="section" style="display:none">
-    <div class="card" style="overflow-x:auto">
-        <table>
-            <thead><tr><th>Symbol</th><th>Type</th><th>Entry</th><th>Exit</th><th>PnL</th><th>Date</th><th>Action</th></tr></thead>
-            <tbody id="list"></tbody>
-        </table>
-    </div>
+  <div class="card" style="overflow-x:auto; max-height:70vh;">
+    <table>
+      <thead>
+        <tr>
+          <th>Market</th><th>Symbol</th><th>Link</th><th>Session</th><th>Type</th><th>Entry</th><th>Exit</th><th>Size</th><th>PnL</th><th>Date</th><th>Strategy</th><th>Psychology</th><th>Delete</th>
+        </tr>
+      </thead>
+      <tbody id="list"></tbody>
+    </table>
+  </div>
 </div>
 
+<!-- CALENDAR -->
+<div id="calendar" class="section" style="display:none">
+  <div class="month-summary" id="calMonthSummary"></div>
+  <div class="calendar-container">
+    <div class="calendar-main">
+      <div class="calendar-grid" id="calendarGrid">
+        <div class="calendar-header">Sun</div><div class="calendar-header">Mon</div>
+        <div class="calendar-header">Tue</div><div class="calendar-header">Wed</div>
+        <div class="calendar-header">Thu</div><div class="calendar-header">Fri</div>
+        <div class="calendar-header">Sat</div>
+      </div>
+    </div>
+    <div class="calendar-sidebar" id="weeklyStats"></div>
+  </div>
+</div>
+
+<!-- CHARTS -->
 <div id="charts" class="section" style="display:none">
-    <div class="card"><canvas id="chart"></canvas></div>
+  <div class="card"><canvas id="chart"></canvas></div>
 </div>
 
+<!-- STATISTICS -->
+<div id="statistics" class="section" style="display:none">
+  <div class="card">
+    <h3>Statistics</h3>
+    <div><strong>Long:</strong> <span id="longCount">0</span></div>
+    <div><strong>Short:</strong> <span id="shortCount">0</span></div>
+    <div><strong>Time spent backtesting:</strong> <span id="backtestTime">0h 0m</span></div>
+    <div><strong>Total data backtested:</strong> <span id="totalData">0 months</span></div>
+    <div><strong>Avg. realized R-multiple:</strong> <span id="avgR">0</span></div>
+    <div><strong>Avg hold time:</strong> <span id="avgHold">0h 0m</span></div>
+    <div><strong>Max consecutive winning days:</strong> <span id="maxWinDays">0</span></div>
+    <div><strong>Max consecutive losing days:</strong> <span id="maxLossDays">0</span></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
 <div id="settings" class="section" style="display:none">
-    <div class="card">
-        <label>Base Capital</label>
-        <input id="setBaseCapital" type="number">
-        <button onclick="saveSettings()">Update Capital</button>
-    </div>
+  <div class="card">
+    <label>Base Capital</label>
+    <input id="setBaseCapital" type="number" value="10000">
+    <button onclick="saveSettings()">Save Settings</button>
+  </div>
 </div>
 
 <script>
-// --- CORE LOGIC ---
-let trades = JSON.parse(localStorage.getItem("trades") || "[]");
-let baseCapital = localStorage.getItem("baseCapital") ? parseFloat(localStorage.getItem("baseCapital")) : 10000;
-
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
-
-// Sidebar Navigation
-const sidebar = document.getElementById("sidebar");
-const menuBtn = document.getElementById("menuBtn");
-menuBtn.onclick = () => sidebar.classList.toggle("active");
-
-document.querySelectorAll(".sidebar a").forEach(link => {
-    link.onclick = (e) => {
-        e.preventDefault();
-        const target = link.dataset.tab;
-        document.querySelectorAll(".section").forEach(s => s.style.display = "none");
-        document.getElementById(target).style.display = "block";
-        sidebar.classList.remove("active");
-        
-        if(target === 'calendar') renderCalendar();
-        if(target === 'charts') updateChart();
-        if(target === 'dash') render();
-    };
+// Sidebar toggle
+const sidebar=document.getElementById("sidebar");
+const menuBtn=document.getElementById("menuBtn");
+menuBtn.onclick=()=>sidebar.classList.toggle("active");
+document.querySelectorAll(".sidebar a").forEach(a=>{
+  a.onclick=e=>{
+    e.preventDefault();
+    document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+    document.getElementById(a.dataset.tab).style.display="block";
+    sidebar.classList.remove("active");
+    if(a.dataset.tab==='calendar') renderCalendar();
+    if(a.dataset.tab==='charts') updateChart();
+    if(a.dataset.tab==='dash') renderDashboard();
+    if(a.dataset.tab==='statistics') renderStatistics();
+  }
 });
 
-function render() {
-    const list = document.getElementById("list");
-    let netPnL = 0, winCount = 0, totalProfit = 0, totalLoss = 0;
-    list.innerHTML = "";
+// Trade Data
+let trades=JSON.parse(localStorage.getItem("trades")||"[]");
+let baseCapital=localStorage.baseCapital?+localStorage.baseCapital:10000;
 
-    trades.forEach((t, i) => {
-        const pnl = t.type === 'buy' ? (t.exit - t.entry) * t.size : (t.entry - t.exit) * t.size;
-        netPnL += pnl;
-        if (pnl > 0) { winCount++; totalProfit += pnl; } else { totalLoss += pnl; }
+// RENDER DASHBOARD & LOG
+function renderDashboard(){
+  const listEl=document.getElementById("list");
+  const netEl=document.getElementById("net");
+  const profitEl=document.getElementById("profit");
+  const lossEl=document.getElementById("loss");
+  const capitalEl=document.getElementById("capital");
+  const dynamicCapitalEl=document.getElementById("dynamicCapital");
+  const countEl=document.getElementById("count");
+  const winRateEl=document.getElementById("winRate");
 
-        list.innerHTML += `<tr>
-            <td>${t.symbol}</td><td>${t.type.toUpperCase()}</td>
-            <td>${t.entry}</td><td>${t.exit}</td>
-            <td style="color:${pnl>=0?'#22c55e':'#ef4444'}">${pnl.toFixed(2)}</td>
-            <td>${t.date}</td>
-            <td><button onclick="deleteTrade(${i})" style="padding:4px 8px; background:#ef4444; color:#fff">X</button></td>
-        </tr>`;
-    });
+  let netPnL=0, profit=0, loss=0, dynamicCapital=baseCapital, winCount=0;
 
-    document.getElementById("net").textContent = `$${netPnL.toFixed(2)}`;
-    document.getElementById("profit").textContent = `$${totalProfit.toFixed(2)}`;
-    document.getElementById("loss").textContent = `$${totalLoss.toFixed(2)}`;
-    document.getElementById("count").textContent = trades.length;
-    document.getElementById("winRate").textContent = trades.length ? Math.round((winCount/trades.length)*100) + "%" : "0%";
-    document.getElementById("capital").textContent = `$${baseCapital}`;
+  listEl.innerHTML="";
+  trades.forEach((t,i)=>{
+    const pnl=t.type==='buy'?(t.exit-t.entry)*t.size:(t.entry-t.exit)*t.size;
+    netPnL+=pnl; if(pnl>0) profit+=pnl; else loss+=pnl;
+    dynamicCapital+=pnl;
+    if(pnl>0) winCount++;
+
+    listEl.innerHTML+=`<tr>
+      <td>${t.market}</td><td>${t.symbol}</td><td><a href="${t.tradeLink||'#'}" target="_blank">Link</a></td>
+      <td>${t.session}</td><td>${t.type}</td><td>${t.entry}</td><td>${t.exit}</td><td>${t.size}</td>
+      <td>${pnl.toFixed(2)}</td><td>${t.date}</td><td>${t.strategy}</td><td>${t.psychology}</td>
+      <td><button onclick="deleteTrade(${i})">🗑️</button></td>
+    </tr>`;
+  });
+
+  netEl.textContent=`$${netPnL.toFixed(2)}`;
+  dynamicCapitalEl.textContent=`$${dynamicCapital.toFixed(2)}`;
+  capitalEl.textContent=`$${baseCapital.toFixed(2)}`;
+  profitEl.textContent=`$${profit.toFixed(2)}`;
+  lossEl.textContent=`$${loss.toFixed(2)}`;
+  countEl.textContent=trades.length;
+  winRateEl.textContent=trades.length?Math.round((winCount/trades.length)*100)+'%':'0%';
+  dynamicCapitalEl.style.color = dynamicCapital>=baseCapital?'#22c55e':'#ef4444';
+  netEl.style.color = dynamicCapital>=baseCapital?'#22c55e':'#ef4444';
 }
 
-function addTrade() {
-    const trade = {
-        symbol: document.getElementById('symbol').value,
-        type: document.getElementById('type').value,
-        entry: parseFloat(document.getElementById('entry').value),
-        exit: parseFloat(document.getElementById('exit').value),
-        size: parseFloat(document.getElementById('size').value),
-        date: document.getElementById('tradeDate').value || new Date().toISOString().split("T")[0]
-    };
-    if(!trade.symbol || isNaN(trade.entry)) return alert("Fill data");
-    trades.push(trade);
-    localStorage.setItem("trades", JSON.stringify(trades));
-    render();
-    alert("Trade Saved!");
+// ADD TRADE
+function addTrade(){
+  const trade={
+    market:document.getElementById("market").value,
+    symbol:document.getElementById("symbol").value,
+    tradeLink:document.getElementById("tradeLink").value,
+    session:document.getElementById("session").value,
+    type:document.getElementById("type").value,
+    entry:+document.getElementById("entry").value,
+    exit:+document.getElementById("exit").value,
+    size:+document.getElementById("size").value,
+    date:document.getElementById("tradeDate").value||new Date().toISOString().split("T")[0],
+    strategy:document.getElementById("strategy").value,
+    psychology:document.getElementById("psychology").value,
+    pnl:0
+  };
+  trade.pnl=trade.type==='buy'?(trade.exit-trade.entry)*trade.size:(trade.entry-trade.exit)*trade.size;
+  trades.push(trade);
+  localStorage.setItem("trades",JSON.stringify(trades));
+  renderDashboard();
+  ['market','symbol','tradeLink','session','type','entry','exit','size','tradeDate','strategy','psychology'].forEach(id=>document.getElementById(id).value='');
 }
 
-function deleteTrade(i) {
-    trades.splice(i, 1);
-    localStorage.setItem("trades", JSON.stringify(trades));
-    render();
+// DELETE TRADE
+function deleteTrade(i){ trades.splice(i,1); localStorage.setItem("trades",JSON.stringify(trades)); renderDashboard(); }
+
+// SETTINGS
+function saveSettings(){ baseCapital=+document.getElementById("setBaseCapital").value; localStorage.baseCapital=baseCapital; renderDashboard(); }
+
+// CALENDAR
+function renderCalendar(){
+  const grid=document.getElementById("calendarGrid");
+  const monthDiv=document.getElementById("calMonthSummary");
+  const weeklyDiv=document.getElementById("weeklyStats");
+  grid.innerHTML="";
+  weeklyDiv.innerHTML="";
+  let now=new Date();
+  const year=now.getFullYear(), month=now.getMonth();
+  const firstDay=new Date(year,month,1).getDay();
+  const lastDay=new Date(year,month+1,0).getDate();
+  let monthPnL=0, weeks={};
+
+  for(let d=0;d<firstDay;d++) grid.innerHTML+=`<div class="day-box"></div>`;
+
+  for(let d=1;d<=lastDay;d++){
+    const dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayTrades=trades.filter(t=>t.date===dateStr);
+    const dayPnL=dayTrades.reduce((a,b)=>a+b.pnl,0);
+    monthPnL+=dayPnL;
+    const color=dayPnL>0?'#22c55e':dayPnL<0?'#ef4444':'#1f2a44';
+    grid.innerHTML+=`<div class="day-box" style="background:${color}"><span class="day-num">${d}</span>${dayPnL!==0?`<span class="day-pnl">${dayPnL.toFixed(2)}</span>`:''}${dayTrades.length>0?`<span class="day-trades">${dayTrades.length} trades</span>`:''}</div>`;
+    const week=Math.ceil((d+firstDay)/7); weeks[week]=(weeks[week]||0)+dayPnL;
+  }
+
+  monthDiv.innerHTML=`Monthly PnL: $${monthPnL.toFixed(2)}`;
+  let html='';
+  for(const w in weeks) html+=`<div class="week-card"><span class="week-label">Week ${w}</span><span class="week-val" style="color:${weeks[w]>=0?'#22c55e':'#ef4444'}">$${weeks[w].toFixed(2)}</span></div>`;
+  weeklyDiv.innerHTML=html;
 }
 
-// --- CALENDAR ---
-function renderCalendar() {
-    const grid = document.getElementById('calendarGrid');
-    const side = document.getElementById('weeklyStats');
-    
-    // Keep headers
-    const headers = grid.querySelectorAll('.calendar-header');
-    grid.innerHTML = "";
-    headers.forEach(h => grid.appendChild(h));
-
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-    document.getElementById('calMonthYear').textContent = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long', year: 'numeric' });
-
-    // Empty slots
-    for(let i=0; i<firstDay; i++) grid.innerHTML += `<div class="day-box" style="background:#f8fafc"></div>`;
-
-    let monthPnL = 0;
-    let weeksPnL = [0,0,0,0,0,0];
-
-    for(let d=1; d<=daysInMonth; d++){
-        const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const dayTrades = trades.filter(t => t.date === dateStr);
-        const dayPnL = dayTrades.reduce((acc, t) => acc + (t.type === 'buy' ? (t.exit - t.entry) * t.size : (t.entry - t.exit) * t.size), 0);
-        monthPnL += dayPnL;
-        const weekIdx = Math.floor((d + firstDay - 1) / 7);
-        weeksPnL[weekIdx] += dayPnL;
-        let pnlClass = dayPnL > 0 ? 'pnl-pos' : (dayPnL < 0 ? 'pnl-neg' : '');
-        grid.innerHTML += `
-            <div class="day-box ${pnlClass}">
-                <span class="day-num">${d}</span>
-                ${dayPnL !== 0 ? `<span class="day-pnl">${dayPnL > 0 ? '+' : ''}${dayPnL.toFixed(2)}</span>` : ''}
-                ${dayTrades.length>0 ? `<span class="day-trades">${dayTrades.length} trades</span>` : ''}
-            </div>
-        `;
-    }
-
-    document.getElementById('calMonthPnL').textContent = `$${monthPnL.toFixed(2)}`;
-    document.getElementById('calMonthPnL').style.color = monthPnL>=0?'#16a34a':'#ef4444';
-
-    // Weekly sidebar
-    side.innerHTML = "<h4>Weekly Stats</h4>";
-    weeksPnL.forEach((wpnl, i) => {
-        if(wpnl!==0 || i<4){
-            side.innerHTML += `<div class="week-card">
-                <span class="week-label">Week ${i+1}</span>
-                <span class="week-val" style="color:${wpnl>=0?'#16a34a':'#ef4444'}">$${wpnl.toFixed(2)}</span>
-            </div>`;
-        }
-    });
-}
-
-function changeMonth(delta){
-    currentMonth += delta;
-    if(currentMonth>11){ currentMonth=0; currentYear++; }
-    if(currentMonth<0){ currentMonth=11; currentYear--; }
-    renderCalendar();
-}
-
-function saveSettings() {
-    baseCapital = parseFloat(document.getElementById('setBaseCapital').value);
-    localStorage.setItem("baseCapital", baseCapital);
-    render();
-}
-
-// Placeholder for chart
+// CHART
+let chart;
 function updateChart(){
-    const ctx = document.getElementById('chart').getContext('2d');
-    new Chart(ctx, { type:'bar', data:{labels:trades.map(t=>t.date), datasets:[{label:'PnL', data:trades.map(t=>t.type==='buy'?(t.exit-t.entry)*t.size:(t.entry-t.exit)*t.size), backgroundColor:trades.map(t=>t.type==='buy'?'#22c55e':'#ef4444')}]}, options:{responsive:true, plugins:{legend:{display:false}}}});
-}
-
-// Initial Render
-render();
-</script>
-</body>
-</html>
+  const ctx=document.getElementById("chart").getContext("2d");
+  if(chart) chart.destroy();
+  chart=new Chart(ctx,{type:'bar',data:{labels:trades.map(t=>t.date),datasets:[{label:'PnL',data:trades.map
